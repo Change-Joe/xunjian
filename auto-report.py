@@ -437,16 +437,28 @@ load5_db_field = ['mean(load5)', 'max(load5)']
 load15_chart_name = ['Average load15', 'Max load15']
 load15_chart_ylabel = ['Average load15', 'Max load15']
 load15_db_field = ['mean(load15)', 'max(load15)']
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 Mem 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('Mem Trend', ['Average Mem Trend'], ['Mem used percent'],
           ['mean(used_percent)'], 'mem', host_list)
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 Heap 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('Heap Trend', ['Average Heap Trend'], ['Heap percent usage'],
           ['mean(mem_heap_used_percent)'], 'elasticsearch_jvm', host_list)
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 CPU 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('CPU usage', cpu_usage_chart_name, cpu_usage_chart_ylabel,
           cpu_usage_db_field, 'cpu', host_list)
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 Load1 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('load1', load1_chart_name, load1_chart_ylabel, load1_db_field,
           'system', host_list)
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 Load5 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('load5', load5_chart_name, load5_chart_ylabel, load5_db_field,
           'system', host_list)
+
+# >>>>>>>>>>>>>>>>>>>>>>绘制 Load15 趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart('load15', load15_chart_name, load15_chart_ylabel, load15_db_field,
           'system', host_list)
 # 判断客户计算节点是否有telegraf进程
@@ -457,10 +469,12 @@ if result:
     trident_host_list = []
     for hit in result_list:
         trident_host_list.append(hit['value'])
+    # >>>>>>>>>>>>>>>>>>>>绘制 trident 内核丢包图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     add_chart('trident_kernel_drop_packets',
               ['Sum trident kernel drop packets'], ['value'], ['sum(value)'],
               'trident_dispatcher_kernel_drops', trident_host_list)
 
+# >>>>>>>>>>>>>>>>>>>>>>绘制网卡丢包图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 add_chart_drop_packet('in', 'network_card_drop_packets_in',
                       'Average diff of drop packets', 'packets drop',
                       host_list)
@@ -490,6 +504,7 @@ if system_version == 'DeepFlow-5.3.3':
         bit_rx_datetime.append(timestamp_datetime(int(bucket['key_as_string'])))
         bit_tx_datetime.append(timestamp_datetime(int(bucket['key_as_string'])))
 
+    # >>>>>>>>>>>>>>>>>>>>绘制客户业务流量趋势图<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     add_chart_es('customer traffic trend', 'customer traffic trend', 'Kbit/s',
                  bit_rx_datetime, bit_rx, bit_tx_datetime, bit_tx)
 
